@@ -1,53 +1,38 @@
-import React from 'react';
-
-interface CircularProgressProps {
-  percentage: number;
-  size?: number;
-  strokeWidth?: number;
-  color?: string;
-  label?: string;
-}
-
-export function CircularProgress({
-  percentage,
-  size = 140,
-  strokeWidth = 12,
-  color = '#3b82f6',
-  label
-}: CircularProgressProps) {
-  const radius = (size - strokeWidth) / 2;
-  const circumference = radius * 2 * Math.PI;
-  const offset = circumference - (percentage / 100) * circumference;
+export function CircularProgress({ percentage, color }: { percentage: number, color: string }) {
+  const radius = 35;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className="relative flex flex-col items-center justify-center">
-      <svg width={size} height={size} className="transform -rotate-90">
+    <div className="relative w-24 h-24 flex items-center justify-center">
+      <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+        {/* Background circle */}
         <circle
-          className="text-slate-800"
-          strokeWidth={strokeWidth}
+          cx="50"
+          cy="50"
+          r={radius}
           stroke="currentColor"
+          strokeWidth="8"
           fill="transparent"
-          r={radius}
-          cx={size / 2}
-          cy={size / 2}
+          className="text-slate-800"
         />
+        {/* Progress circle */}
         <circle
-          className="transition-all duration-1000 ease-in-out drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]"
-          strokeWidth={strokeWidth}
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          strokeLinecap="round"
-          stroke={color}
-          fill="transparent"
+          cx="50"
+          cy="50"
           r={radius}
-          cx={size / 2}
-          cy={size / 2}
+          stroke={color}
+          strokeWidth="8"
+          fill="transparent"
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          className="transition-all duration-1000 ease-out"
+          strokeLinecap="round"
         />
       </svg>
-      <div className="absolute top-0 flex flex-col items-center justify-center" style={{ height: size, width: size }}>
-        <span className="text-4xl font-black text-white drop-shadow-md">{percentage}%</span>
+      <div className="absolute inset-0 flex items-center justify-center flex-col">
+        <span className="text-2xl font-black text-white">{percentage}%</span>
       </div>
-      {label && <p className="mt-4 text-xl font-bold text-slate-200 tracking-wide">{label}</p>}
     </div>
   );
 }

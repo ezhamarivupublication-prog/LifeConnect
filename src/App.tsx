@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Dashboard, type Connection } from './components/Dashboard'
-import { InputForm, type ConnectionInput } from './components/InputForm'
+import { InputForm } from './components/InputForm'
 import { generateReport } from './utils/calculator'
 import { supabase } from './lib/supabase'
 
@@ -10,7 +10,7 @@ function App() {
   const [connections, setConnections] = useState<Connection[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
-  const handleCalculate = async (user: any, conns: ConnectionInput[]) => {
+  const handleCalculate = async (user: any, conns: { id: string; name: string; dob: string }[]) => {
     setIsSaving(true);
     const reportData = generateReport(user, conns);
     
