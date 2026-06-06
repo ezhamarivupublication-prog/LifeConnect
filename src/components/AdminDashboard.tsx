@@ -118,7 +118,9 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                               <div key={idx} className="text-xs bg-slate-800/80 p-2 rounded-lg border border-slate-700">
                                 <div>
                                   <span className="font-semibold text-white text-sm">{conn.name}</span>
-                                  <span className="text-slate-400 ml-1">({new Date(conn.dob).toLocaleDateString()})</span>
+                                  {conn.dob && (
+                                    <span className="text-slate-400 ml-1">({new Date(conn.dob).toLocaleDateString()})</span>
+                                  )}
                                 </div>
                                 <div className="flex items-center gap-3 mt-1">
                                   <span className="text-blue-400 font-medium">Group {conn.powerGroup}</span>

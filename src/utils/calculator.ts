@@ -7,6 +7,7 @@ export interface CalculatedUser {
 export interface CalculatedConnection {
   id: string;
   name: string;
+  dob: string;
   powerGroup: string;
   compatibility: number;
 }
@@ -49,6 +50,7 @@ export function generateReport(user: { name: string, dob: string }, friends: { i
     return {
       id: f.id,
       name: f.name,
+      dob: f.dob,
       powerGroup: calculatePowerGroup(f.dob),
       compatibility: calculateCompatibility(user.dob, f.dob)
     };
