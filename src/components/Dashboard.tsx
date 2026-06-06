@@ -5,6 +5,7 @@ import { Trophy, Users, ShieldAlert, Award, AlertCircle } from 'lucide-react';
 export interface Connection {
   id: string;
   name: string;
+  dob?: string;
   powerGroup: string;
   compatibility: number;
 }
