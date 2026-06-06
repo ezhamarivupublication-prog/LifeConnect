@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Users, Plus, Trash2, Calculator } from 'lucide-react';
+import { Users, Plus, Trash2, Calculator, Calendar } from 'lucide-react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export interface ConnectionInput {
   id: string;
   name: string;
-  dob: string;
+  dob: Date | null;
 }
 
 interface InputFormProps {
@@ -13,14 +15,14 @@ interface InputFormProps {
 
 export function InputForm({ onCalculate }: InputFormProps) {
   const [userName, setUserName] = useState('');
-  const [userDob, setUserDob] = useState('');
+  const [userDob, setUserDob] = useState<Date | null>(null);
   
   const [connections, setConnections] = useState<ConnectionInput[]>([
-    { id: '1', name: '', dob: '' }
+    { id: '1', name: '', dob: null }
   ]);
 
   const addConnection = () => {
-    setConnections([...connections, { id: Date.now().toString(), name: '', dob: '' }]);
+    setConnections([...connections, { id: Date.now().toString(), name: '', dob: null }]);
   };
 
   const removeConnection = (id: string) => {
@@ -44,13 +46,21 @@ export function InputForm({ onCalculate }: InputFormProps) {
     }
     
     // Filter out empty names or DOBS
-    const validConnections = connections.filter(c => c.name.trim() !== '' && c.dob !== '');
+    const validConnections = connections.filter(c => c.name.trim() !== '' && c.dob !== null);
     if (validConnections.length === 0) {
       alert('Please add at least one connection with a name and date of birth');
       return;
     }
 
-    onCalculate({ name: userName, dob: userDob }, validConnections);
+    // Convert dates to ISO strings for the calculation engine
+    const userDobStr = userDob.toISOString();
+    const formattedConnections = validConnections.map(c => ({
+      ...c,
+      dob: c.dob!.toISOString()
+    }));
+
+    // @ts-ignore - The calculation engine can accept ISO strings or Date objects depending on implementation
+    onCalculate({ name: userName, dob: userDobStr }, formattedConnections);
   };
 
   return (
@@ -83,14 +93,22 @@ export function InputForm({ onCalculate }: InputFormProps) {
                   placeholder="Enter your name"
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2 relative">
                 <label className="text-sm font-medium text-slate-300">Your Date of Birth</label>
-                <input 
-                  type="date" 
-                  value={userDob}
-                  onChange={(e) => setUserDob(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
-                />
+                <div className="relative">
+                  <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 z-10 pointer-events-none" />
+                  <DatePicker 
+                    selected={userDob}
+                    onChange={(date) => setUserDob(date)}
+                    className="w-full bg-slate-800 border border-slate-600 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    placeholderText="Select your birthday"
+                    dateFormat="MMMM d, yyyy"
+                    showMonthDropdown
+                    showYearDropdown
+                    dropdownMode="select"
+                    maxDate={new Date()}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -124,14 +142,22 @@ export function InputForm({ onCalculate }: InputFormProps) {
                       placeholder="Friend's name"
                     />
                   </div>
-                  <div className="md:col-span-6 space-y-1">
+                  <div className="md:col-span-6 space-y-1 relative">
                     <label className="text-xs font-medium text-slate-400">Date of Birth</label>
-                    <input 
-                      type="date" 
-                      value={conn.dob}
-                      onChange={(e) => updateConnection(conn.id, 'dob', e.target.value)}
-                      className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
+                    <div className="relative">
+                      <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 z-10 pointer-events-none" />
+                      <DatePicker 
+                        selected={conn.dob}
+                        onChange={(date) => updateConnection(conn.id, 'dob', date)}
+                        className="w-full bg-slate-800 border border-slate-600 rounded-lg pl-10 pr-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholderText="Select birthday"
+                        dateFormat="MMMM d, yyyy"
+                        showMonthDropdown
+                        showYearDropdown
+                        dropdownMode="select"
+                        maxDate={new Date()}
+                      />
+                    </div>
                   </div>
                   <div className="md:col-span-1 flex justify-end pb-1">
                     {connections.length > 1 && (
