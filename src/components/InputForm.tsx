@@ -10,7 +10,7 @@ export interface ConnectionInput {
 }
 
 interface InputFormProps {
-  onCalculate: (user: any, connections: ConnectionInput[]) => void;
+  onCalculate: (user: any, connections: { id: string; name: string; dob: string }[]) => void;
 }
 
 export function InputForm({ onCalculate }: InputFormProps) {

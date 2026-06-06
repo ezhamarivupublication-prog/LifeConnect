@@ -1,28 +1,28 @@
-export function CircularProgress({ percentage, color }: { percentage: number, color: string }) {
-  const radius = 35;
+export function CircularProgress({ percentage, color, size = 100, strokeWidth = 8, label }: { percentage: number, color: string, size?: number, strokeWidth?: number, label?: string }) {
+  const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className="relative w-24 h-24 flex items-center justify-center">
-      <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+    <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
+      <svg className="w-full h-full transform -rotate-90" viewBox={"0 0  "}>
         {/* Background circle */}
         <circle
-          cx="50"
-          cy="50"
+          cx={size / 2}
+          cy={size / 2}
           r={radius}
           stroke="currentColor"
-          strokeWidth="8"
+          strokeWidth={strokeWidth}
           fill="transparent"
           className="text-slate-800"
         />
         {/* Progress circle */}
         <circle
-          cx="50"
-          cy="50"
+          cx={size / 2}
+          cy={size / 2}
           r={radius}
           stroke={color}
-          strokeWidth="8"
+          strokeWidth={strokeWidth}
           fill="transparent"
           strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}
@@ -31,7 +31,8 @@ export function CircularProgress({ percentage, color }: { percentage: number, co
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center flex-col">
-        <span className="text-2xl font-black text-white">{percentage}%</span>
+        <span className="font-black text-white" style={{ fontSize: size / 4 }}>{percentage}%</span>
+        {label && <span className="text-slate-400 font-medium mt-1" style={{ fontSize: size / 10 }}>{label}</span>}
       </div>
     </div>
   );
