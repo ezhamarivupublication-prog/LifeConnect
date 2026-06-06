@@ -155,7 +155,12 @@ export function Dashboard({ user, initialConnections, onBack }: DashboardProps) 
                     </div>
                     <div>
                       <h3 className="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors">{conn.name}</h3>
-                      <p className="text-slate-400 mt-1">Power Group: {conn.powerGroup}</p>
+                      <div className="flex gap-4 mt-1 text-slate-400">
+                        {conn.dob && (
+                          <p>DOB: <span className="text-slate-300">{new Date(conn.dob).toLocaleDateString()}</span></p>
+                        )}
+                        <p>Power Group: <span className="text-blue-400">{conn.powerGroup}</span></p>
+                      </div>
                     </div>
                   </div>
                   
