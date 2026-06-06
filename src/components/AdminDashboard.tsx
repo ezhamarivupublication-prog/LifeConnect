@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { RefreshCw, Database } from 'lucide-react';
+import { RefreshCw, Database, LogOut } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+interface AdminDashboardProps {
+  onLogout: () => void;
+}
 
 interface Record {
   id: string;
@@ -12,7 +16,7 @@ interface Record {
   connections: any[];
 }
 
-export function AdminDashboard() {
+export function AdminDashboard({ onLogout }: AdminDashboardProps) {
   const [records, setRecords] = useState<Record[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -62,6 +66,13 @@ export function AdminDashboard() {
              >
                <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
                Refresh
+             </button>
+             <button 
+               onClick={onLogout}
+               className="flex items-center gap-2 px-6 py-3 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-xl transition-colors font-semibold border border-red-500/30"
+             >
+               <LogOut className="w-5 h-5" />
+               Sign Out
              </button>
           </div>
         </div>
