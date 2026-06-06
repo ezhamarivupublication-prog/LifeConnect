@@ -20,3 +20,5 @@
 .react-datepicker__month-select, .react-datepicker__year-select { background-color: #1e293b; color: white; border: 1px solid #334155; border-radius: 0.25rem; padding: 2px; } 
 .react-datepicker__navigation-icon::before { border-color: #94a3b8; } 
 .react-datepicker__navigation:hover *::before { border-color: #f1f5f9; }
+
+body { background-image: url('/bg.png'); background-size: cover; background-position: center; background-attachment: fixed; background-color: #0f172a; } .bg-gradient-to-br.from-slate-900 { background: rgba(15, 23, 42, 0.7) !important; backdrop-filter: blur(12px); } .bg-slate-900 { background: rgba(15, 23, 42, 0.7) !important; backdrop-filter: blur(12px); }

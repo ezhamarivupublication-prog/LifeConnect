@@ -43,8 +43,28 @@ export function Dashboard({ user, initialConnections, onBack }: DashboardProps) 
       <div className="max-w-6xl mx-auto space-y-12">
         
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-slate-800/50 p-8 rounded-3xl border border-slate-700/50 backdrop-blur-md shadow-2xl">
-          <div>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-slate-800/50 p-8 rounded-3xl border border-slate-700/50 backdrop-blur-md shadow-2xl relative overflow-hidden">
+          
+          {/* Abstract Logo Decoration */}
+          <div className="absolute -top-10 -right-10 opacity-30 pointer-events-none">
+            <svg width="250" height="250" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="30" cy="50" r="18" fill="url(#grad1_dash)" />
+              <circle cx="70" cy="50" r="18" fill="url(#grad2_dash)" />
+              <path d="M 45 50 L 55 50" stroke="#38bdf8" strokeWidth="6" strokeLinecap="round" />
+              <defs>
+                <linearGradient id="grad1_dash" x1="12" y1="32" x2="48" y2="68" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#38bdf8" />
+                  <stop offset="1" stopColor="#818cf8" />
+                </linearGradient>
+                <linearGradient id="grad2_dash" x1="52" y1="32" x2="88" y2="68" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#34d399" />
+                  <stop offset="1" stopColor="#38bdf8" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+
+          <div className="relative z-10">
             <div className="flex items-center gap-4 mb-2">
               <button onClick={onBack} className="text-slate-400 hover:text-white transition-colors">&larr; Back</button>
             </div>

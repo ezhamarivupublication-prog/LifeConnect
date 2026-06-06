@@ -68,10 +68,32 @@ export function InputForm({ onCalculate }: InputFormProps) {
       <div className="w-full max-w-4xl bg-slate-800/60 p-8 md:p-12 rounded-3xl border border-slate-700/50 backdrop-blur-md shadow-2xl">
         
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent inline-block pb-2">
+          <div className="flex justify-center mb-6">
+            <svg width="90" height="90" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-[0_0_20px_rgba(56,189,248,0.4)] animate-pulse">
+              <circle cx="30" cy="50" r="18" fill="url(#grad1)" />
+              <circle cx="70" cy="50" r="18" fill="url(#grad2)" />
+              <path d="M 45 50 L 55 50" stroke="#38bdf8" strokeWidth="6" strokeLinecap="round" />
+              <path d="M 30 32 Q 50 10 70 32" stroke="url(#grad3)" strokeWidth="3" fill="none" strokeDasharray="4 4" className="animate-[spin_10s_linear_infinite]" style={{transformOrigin: "center"}} />
+              <defs>
+                <linearGradient id="grad1" x1="12" y1="32" x2="48" y2="68" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#38bdf8" />
+                  <stop offset="1" stopColor="#818cf8" />
+                </linearGradient>
+                <linearGradient id="grad2" x1="52" y1="32" x2="88" y2="68" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#34d399" />
+                  <stop offset="1" stopColor="#38bdf8" />
+                </linearGradient>
+                <linearGradient id="grad3" x1="30" y1="32" x2="70" y2="32" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#818cf8" />
+                  <stop offset="1" stopColor="#34d399" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <h1 className="text-5xl md:text-6xl font-black bg-gradient-to-r from-blue-400 via-indigo-400 to-emerald-400 bg-clip-text text-transparent inline-block pb-2 drop-shadow-lg">
             PowerConnect
           </h1>
-          <p className="text-slate-400 mt-2 text-lg">Enter details to calculate compatibility</p>
+          <p className="text-slate-300 mt-3 text-xl font-light tracking-wide">Enter details to calculate compatibility</p>
         </div>
 
         <form onSubmit={handleCalculate} className="space-y-12">
