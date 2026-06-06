@@ -64,8 +64,17 @@ export function InputForm({ onCalculate }: InputFormProps) {
   };
 
   return (
-    <div className="min-h-screen p-6 md:p-12 lg:p-24 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
-      <div className="w-full max-w-4xl bg-slate-800/60 p-8 md:p-12 rounded-3xl border border-slate-700/50 backdrop-blur-md shadow-2xl">
+    <div 
+      className="min-h-screen p-6 md:p-12 lg:p-24 flex items-center justify-center bg-slate-900 relative"
+      style={{
+        backgroundImage: "url('/bg.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed"
+      }}
+    >
+      <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+      <div className="w-full max-w-4xl bg-slate-800/60 p-8 md:p-12 rounded-3xl border border-slate-700/50 backdrop-blur-md shadow-2xl relative z-10">
         
         <div className="text-center mb-12">
           <div className="flex justify-center mb-6">

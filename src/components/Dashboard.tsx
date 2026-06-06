@@ -40,8 +40,17 @@ export function Dashboard({ user, initialConnections, onBack }: DashboardProps) 
   };
 
   return (
-    <div className="min-h-screen p-6 md:p-12 lg:p-24 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <div className="max-w-6xl mx-auto space-y-12">
+    <div 
+      className="min-h-screen p-6 md:p-12 lg:p-24 bg-slate-900 relative"
+      style={{
+        backgroundImage: "url('/bg.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed"
+      }}
+    >
+      <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+      <div className="max-w-6xl mx-auto space-y-12 relative z-10">
         
         {/* Main Branding Header */}
         <div className="text-center mb-8">
