@@ -86,7 +86,7 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                   <th className="p-4 text-slate-300 font-semibold">User Name</th>
                   <th className="p-4 text-slate-300 font-semibold">DOB</th>
                   <th className="p-4 text-slate-300 font-semibold">Power Group</th>
-                  <th className="p-4 text-slate-300 font-semibold">Connections Checked</th>
+                  <th className="p-4 text-slate-300 font-semibold w-1/3">Connections Checked</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-700/50">
@@ -112,7 +112,24 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                         </span>
                       </td>
                       <td className="p-4 text-slate-300">
-                        {record.connections?.length || 0} friends
+                        {record.connections && record.connections.length > 0 ? (
+                          <div className="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                            {record.connections.map((conn, idx) => (
+                              <div key={idx} className="text-xs bg-slate-800/80 p-2 rounded-lg border border-slate-700">
+                                <div>
+                                  <span className="font-semibold text-white text-sm">{conn.name}</span>
+                                  <span className="text-slate-400 ml-1">({new Date(conn.dob).toLocaleDateString()})</span>
+                                </div>
+                                <div className="flex items-center gap-3 mt-1">
+                                  <span className="text-blue-400 font-medium">Group {conn.powerGroup}</span>
+                                  <span className="text-emerald-400 font-bold">{conn.compatibility}% Match</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-slate-500 italic">No friends added</span>
+                        )}
                       </td>
                     </tr>
                   ))
