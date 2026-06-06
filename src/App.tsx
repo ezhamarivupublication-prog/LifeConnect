@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Dashboard } from './components/Dashboard'
+import { Dashboard, type Connection } from './components/Dashboard'
 import { InputForm, type ConnectionInput } from './components/InputForm'
 import { generateReport } from './utils/calculator'
 import { supabase } from './lib/supabase'
@@ -7,7 +7,7 @@ import { supabase } from './lib/supabase'
 function App() {
   const [showDashboard, setShowDashboard] = useState(false);
   const [userData, setUserData] = useState<any>(null);
-  const [connections, setConnections] = useState<ConnectionInput[]>([]);
+  const [connections, setConnections] = useState<Connection[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
   const handleCalculate = async (user: any, conns: ConnectionInput[]) => {
@@ -30,7 +30,7 @@ function App() {
     }
 
     setUserData(reportData.calculatedUser);
-    setConnections(reportData.connections as any); // cast for now, Dashboard uses same shape
+    setConnections(reportData.connections);
     setIsSaving(false);
     setShowDashboard(true);
   };
