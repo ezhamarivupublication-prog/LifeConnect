@@ -61,12 +61,44 @@ export function calculateCompatibility(userDob: string, friendDob: string) {
   
   const userPowers = getPowerDetails(userDob);
   const friendPowers = getPowerDetails(friendDob);
+  const uD = userPowers.datePowerName;
+  const uM = userPowers.monthPowerName;
+  const fD = friendPowers.datePowerName;
+  const fM = friendPowers.monthPowerName;
+
+  const uPure = uD === uM;
+  const fPure = fD === fM;
+
+  let overallCompatibility = 0;
+
+  if (uPure && fPure && uD === fD) {
+    // Type 5: World changing connection
+    overallCompatibility = 100;
+  } else if (!uPure && fPure && (fD === uD || fD === uM)) {
+    // Type 4: Two number Another connection (User mixed, Friend pure matches one)
+    overallCompatibility = 75;
+  } else if (uPure && !fPure && (uD === fD || uD === fM)) {
+    // Type 4: Two number Another connection (Symmetric: User pure matches one of Friend's mixed)
+    overallCompatibility = 75;
+  } else if (uPure && fPure && uD !== fD) {
+    // Type 6: Negative connection
+    overallCompatibility = 50;
+  } else if (!uPure && !fPure && ((uD === fD && uM === fM) || (uD === fM && uM === fD))) {
+    // Type 3: Two connection
+    overallCompatibility = 50;
+  } else if (uD === fD || uD === fM || uM === fD || uM === fM) {
+    // Type 2: One connection
+    overallCompatibility = 25;
+  } else {
+    // Type 1: Not connect
+    overallCompatibility = 0;
+  }
+
+  // Keeping the individual date/month comparisons for UI display
+  const dateCompatibility = uD === fD ? 100 : 50;
+  const monthCompatibility = uM === fM ? 100 : 50;
   
-  // Using the assumption: Same group = 100%, Different group = 50%
-  const dateCompatibility = userPowers.datePowerName === friendPowers.datePowerName ? 100 : 50;
-  const monthCompatibility = userPowers.monthPowerName === friendPowers.monthPowerName ? 100 : 50;
-  
-  const compatibility = Math.round((dateCompatibility + monthCompatibility) / 2);
+  const compatibility = overallCompatibility;
   
   return { compatibility, dateCompatibility, monthCompatibility };
 }
