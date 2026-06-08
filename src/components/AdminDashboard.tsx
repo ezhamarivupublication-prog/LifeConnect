@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { RefreshCw, Database, LogOut, Download, FileText } from 'lucide-react';
+import { RefreshCw, Database, LogOut, Download, FileText, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
@@ -45,6 +45,29 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
   useEffect(() => {
     fetchRecords();
   }, []);
+
+  const handleDelete = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this record? This action cannot be undone.')) {
+      return;
+    }
+    
+    try {
+      const { error } = await supabase
+        .from('calculations')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error deleting record:', error);
+        alert('Failed to delete record. Please try again.');
+      } else {
+        setRecords(prev => prev.filter(r => r.id !== id));
+      }
+    } catch (err) {
+      console.error('Unexpected error during delete:', err);
+      alert('An unexpected error occurred while deleting.');
+    }
+  };
 
   const handleExportExcel = () => {
     if (records.length === 0) return;
@@ -224,6 +247,7 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                   <th className="p-4 text-slate-300 font-semibold">DOB</th>
                   <th className="p-4 text-slate-300 font-semibold">Power Group</th>
                   <th className="p-4 text-slate-300 font-semibold w-1/3">Connections Checked</th>
+                  <th className="p-4 text-slate-300 font-semibold text-center w-24">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-700/50">
@@ -233,7 +257,7 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                   </tr>
                 ) : records.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="p-8 text-center text-slate-400">No calculation records found.</td>
+                    <td colSpan={6} className="p-8 text-center text-slate-400">No calculation records found.</td>
                   </tr>
                 ) : (
                   records.map(record => (
@@ -269,6 +293,15 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                         ) : (
                           <span className="text-slate-500 italic">No friends added</span>
                         )}
+                      </td>
+                      <td className="p-4 text-center">
+                        <button
+                          onClick={() => handleDelete(record.id)}
+                          className="p-2 bg-red-600/10 hover:bg-red-600/20 text-red-500 rounded-xl transition-colors border border-red-500/20"
+                          title="Delete Record"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
                       </td>
                     </tr>
                   ))

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { CircularProgress } from './CircularProgress';
 import { Trophy, Users, ShieldAlert, Award, AlertCircle } from 'lucide-react';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 export interface Connection {
   id: string;
@@ -39,8 +41,50 @@ export function Dashboard({ user, initialConnections, onBack }: DashboardProps) 
   };
 
   const handleExport = () => {
-    // PDF Export Logic will be implemented later
-    alert('PDF Export coming soon!');
+    const doc = new jsPDF();
+    
+    // Header
+    doc.setFillColor(30, 41, 59); // slate-800
+    doc.rect(0, 0, doc.internal.pageSize.width, 40, 'F');
+    
+    doc.setTextColor(56, 189, 248); // blue-400
+    doc.setFontSize(24);
+    doc.setFont("helvetica", "bold");
+    doc.text("PowerConnect Results", 14, 22);
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(14);
+    doc.text(`User: ${user?.name || 'Unknown'}`, 14, 30);
+    
+    doc.setTextColor(148, 163, 184); // slate-400
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Generated: ${new Date().toLocaleString()}`, doc.internal.pageSize.width - 70, 26);
+    
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(12);
+    doc.text(`Power Group: ${user?.powerGroup || 'Unknown'}`, 14, 50);
+    
+    const tableBody = connections.map((conn, index) => [
+      `#${index + 1}`,
+      conn.name,
+      conn.dob ? new Date(conn.dob).toLocaleDateString() : 'N/A',
+      conn.powerGroup,
+      `${conn.compatibility}%`,
+      `Date: ${conn.dateCompatibility ?? '-'}% | Month: ${conn.monthCompatibility ?? '-'}%`
+    ]);
+
+    autoTable(doc, {
+      startY: 55,
+      head: [['Rank', 'Friend Name', 'DOB', 'Power Group', 'Match %', 'Details']],
+      body: tableBody,
+      theme: 'grid',
+      headStyles: { fillColor: [56, 189, 248], textColor: 255, fontStyle: 'bold' },
+      styles: { fontSize: 10, cellPadding: 3 },
+      alternateRowStyles: { fillColor: [241, 245, 249] }
+    });
+
+    doc.save(`PowerConnect_${user?.name?.replace(/\s+/g, '_') || 'Report'}.pdf`);
   };
 
   return (
