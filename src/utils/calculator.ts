@@ -10,33 +10,65 @@ export interface CalculatedConnection {
   dob: string;
   powerGroup: string;
   compatibility: number;
+  dateCompatibility?: number;
+  monthCompatibility?: number;
+  datePowerName?: string;
+  monthPowerName?: string;
 }
 
-// MOCK CALCULATION: Replace this with the actual algorithm
+function digitalRoot(n: number): number {
+  if (n === 0) return 0;
+  return (n - 1) % 9 + 1;
+}
+
+function getPowerName(n: number): string {
+  if ([1, 2, 7].includes(n)) return 'Siriyas';
+  if ([3, 6, 9].includes(n)) return 'Vega';
+  if ([4, 5, 8].includes(n)) return 'Orion';
+  return 'Unknown';
+}
+
+export function getPowerDetails(dob: string) {
+  if (!dob) return { datePowerName: 'Unknown', monthPowerName: 'Unknown', dateRoot: 0, monthRoot: 0 };
+  
+  const dateObj = new Date(dob);
+  if (isNaN(dateObj.getTime())) return { datePowerName: 'Unknown', monthPowerName: 'Unknown', dateRoot: 0, monthRoot: 0 };
+  
+  const day = dateObj.getDate();
+  const month = dateObj.getMonth() + 1;
+  
+  const dateRoot = digitalRoot(day);
+  const monthRoot = digitalRoot(month);
+  
+  return {
+    datePowerName: getPowerName(dateRoot),
+    monthPowerName: getPowerName(monthRoot),
+    dateRoot,
+    monthRoot
+  };
+}
+
 export function calculatePowerGroup(dob: string): string {
-  // Mock logic: Just returning a power group based on the day of the month
-  if (!dob) return 'Unknown';
-  const day = new Date(dob).getDate();
-  if (day <= 6) return 'Nova';
-  if (day <= 12) return 'Vega';
-  if (day <= 18) return 'Siriyas';
-  if (day <= 24) return 'Orion';
-  return 'Lyra';
+  const { datePowerName, monthPowerName, dateRoot, monthRoot } = getPowerDetails(dob);
+  if (datePowerName === 'Unknown') return 'Unknown';
+  return `Date: ${datePowerName} ${dateRoot}, Month: ${monthPowerName} ${monthRoot}`;
 }
 
-// MOCK CALCULATION: Replace this with the actual algorithm
-export function calculateCompatibility(userDob: string, friendDob: string): number {
-  // Mock logic: Generate a deterministic percentage based on the dates
-  if (!userDob || !friendDob) return 0;
+export function calculateCompatibility(userDob: string, friendDob: string) {
+  if (!userDob || !friendDob) {
+    return { compatibility: 0, dateCompatibility: 0, monthCompatibility: 0 };
+  }
   
-  const userTime = new Date(userDob).getTime();
-  const friendTime = new Date(friendDob).getTime();
+  const userPowers = getPowerDetails(userDob);
+  const friendPowers = getPowerDetails(friendDob);
   
-  // Create a pseudo-random but consistent number between 0 and 100
-  const hash = Math.abs(userTime - friendTime);
-  const percentage = (hash % 101); 
+  // Using the assumption: Same group = 100%, Different group = 50%
+  const dateCompatibility = userPowers.datePowerName === friendPowers.datePowerName ? 100 : 50;
+  const monthCompatibility = userPowers.monthPowerName === friendPowers.monthPowerName ? 100 : 50;
   
-  return percentage;
+  const compatibility = Math.round((dateCompatibility + monthCompatibility) / 2);
+  
+  return { compatibility, dateCompatibility, monthCompatibility };
 }
 
 export function generateReport(user: { name: string, dob: string }, friends: { id: string, name: string, dob: string }[]): { calculatedUser: CalculatedUser, connections: CalculatedConnection[] } {
@@ -47,12 +79,19 @@ export function generateReport(user: { name: string, dob: string }, friends: { i
   };
 
   const connections = friends.map(f => {
+    const friendPowerDetails = getPowerDetails(f.dob);
+    const compat = calculateCompatibility(user.dob, f.dob);
+    
     return {
       id: f.id,
       name: f.name,
       dob: f.dob,
       powerGroup: calculatePowerGroup(f.dob),
-      compatibility: calculateCompatibility(user.dob, f.dob)
+      compatibility: compat.compatibility,
+      dateCompatibility: compat.dateCompatibility,
+      monthCompatibility: compat.monthCompatibility,
+      datePowerName: friendPowerDetails.datePowerName,
+      monthPowerName: friendPowerDetails.monthPowerName
     };
   });
 

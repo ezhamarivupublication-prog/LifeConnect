@@ -8,6 +8,10 @@ export interface Connection {
   dob?: string;
   powerGroup: string;
   compatibility: number;
+  dateCompatibility?: number;
+  monthCompatibility?: number;
+  datePowerName?: string;
+  monthPowerName?: string;
 }
 
 interface DashboardProps {
@@ -174,18 +178,44 @@ export function Dashboard({ user, initialConnections, onBack }: DashboardProps) 
                     </div>
                   </div>
                   
-                  <div className="mt-6 md:mt-0 flex items-center gap-8 w-full md:w-auto">
-                    <div className="flex-1 md:w-48">
-                      <div className="flex justify-between mb-2">
-                        <span className={`font-semibold ${status.textClass}`}>{status.text}</span>
-                        <span className="font-bold text-white">{conn.compatibility}%</span>
+                  <div className="mt-6 md:mt-0 flex flex-col md:flex-row items-end md:items-center gap-8 w-full md:w-auto">
+                    <div className="flex-1 w-full md:w-56 space-y-3">
+                      {/* Overall Compatibility */}
+                      <div>
+                        <div className="flex justify-between mb-1">
+                          <span className={`text-sm font-semibold ${status.textClass}`}>Overall {status.text}</span>
+                          <span className="text-sm font-bold text-white">{conn.compatibility}%</span>
+                        </div>
+                        <div className="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
+                          <div className="h-full rounded-full transition-all duration-1000" style={{ width: `${conn.compatibility}%`, backgroundColor: status.color }} />
+                        </div>
                       </div>
-                      <div className="w-full h-3 bg-slate-900 rounded-full overflow-hidden">
-                        <div 
-                          className="h-full rounded-full transition-all duration-1000"
-                          style={{ width: `${conn.compatibility}%`, backgroundColor: status.color }}
-                        />
-                      </div>
+                      
+                      {/* Date Breakdown */}
+                      {conn.dateCompatibility !== undefined && (
+                        <div>
+                          <div className="flex justify-between mb-1">
+                            <span className="text-xs text-slate-400">Date: {conn.datePowerName}</span>
+                            <span className="text-xs font-bold text-blue-400">{conn.dateCompatibility}%</span>
+                          </div>
+                          <div className="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
+                            <div className="h-full rounded-full bg-blue-500 transition-all duration-1000" style={{ width: `${conn.dateCompatibility}%` }} />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Month Breakdown */}
+                      {conn.monthCompatibility !== undefined && (
+                        <div>
+                          <div className="flex justify-between mb-1">
+                            <span className="text-xs text-slate-400">Month: {conn.monthPowerName}</span>
+                            <span className="text-xs font-bold text-indigo-400">{conn.monthCompatibility}%</span>
+                          </div>
+                          <div className="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
+                            <div className="h-full rounded-full bg-indigo-500 transition-all duration-1000" style={{ width: `${conn.monthCompatibility}%` }} />
+                          </div>
+                        </div>
+                      )}
                     </div>
                     <div className="hidden md:block">
                        <CircularProgress percentage={conn.compatibility} size={60} strokeWidth={6} color={status.color} />
